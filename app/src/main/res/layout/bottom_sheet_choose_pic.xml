@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.dialogs.update_profile_photo.">
+    <data>
+        <variable name="viewModel"
+            type="com.github.khaledakassem.photo_weather.ui.fragments.home.HomeViewModel"/>
+    </data>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            style="@style/clickable_view_border"
+            android:id="@+id/container_gallery"
+            android:paddingTop="@dimen/x16dp"
+            android:paddingBottom="@dimen/x16dp"
+            >
+
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_gallary_photo"
+                android:tint="@color/colorPrimary"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/gallery"
+                android:textSize="@dimen/x15sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="@dimen/x15dp"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/container_camera"
+            android:gravity="center_horizontal"
+            style="@style/clickable_view_border"
+            android:paddingTop="@dimen/x16dp"
+            >
+
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_camera_photo"
+                android:tint="@color/colorPrimary"
+                />
+
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/camera"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/x15sp"
+                android:paddingTop="@dimen/x16dp"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</layout>

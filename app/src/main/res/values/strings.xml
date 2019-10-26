@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">PhotoWeather</string>
+    <string name="msg_error_connection">Error in connection</string>
+    <string name="msg_something_error">Something error</string>
+    <string name="msg_server_error">Server error… please try again</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="home">Home</string>
+    <string name="photos_list">Photos List</string>
+    <string name="about_us">About Us</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="choose_or_pic">Choose photo or pic new</string>
+    <string name="ok">Ok</string>
+    <string name="gps_off">Ohh .. GPS is off please enable it now!!</string>
+    <string name="enable_gps">Please enable your GPS !</string>
+    <string name="details">Details</string>
+
+</resources>

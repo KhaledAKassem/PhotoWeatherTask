@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_1">@dimen/x1dp</dimen>
+    <dimen name="space_6">@dimen/x6dp</dimen>
+    <dimen name="space_10">@dimen/x10dp</dimen>
+    <dimen name="space_12">@dimen/x12dp</dimen>
+    <dimen name="space_24">@dimen/x24dp</dimen>
+
+    <dimen name="cardView_corner_radius">@dimen/x5dp</dimen>
+    <dimen name="shadow_medium">@dimen/x4dp</dimen>
+    <dimen name="medium_text">@dimen/x14sp</dimen>
+    <dimen name="large_text">@dimen/x16sp</dimen>
+    <dimen name="huge_text">@dimen/x18sp</dimen>
+    <dimen name="very_huge_text">@dimen/x26sp</dimen>
+
+</resources>

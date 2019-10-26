@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewHolder"
+            type="com.github.khaledakassem.photo_weather.ui.adapters.PhotosListAdapter.ItemHistoryPhoto" />
+    </data>
+<androidx.cardview.widget.CardView
+    app:cardCornerRadius="@dimen/x15dp"
+    android:layout_margin="@dimen/x15dp"
+    style="@style/clickable_view_border"
+    android:elevation="@dimen/x10dp"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/x300dp">
+
+    <ImageView
+        android:id="@+id/img_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</androidx.cardview.widget.CardView>
+</layout>

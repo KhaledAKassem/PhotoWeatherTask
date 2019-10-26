@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/navigation_graph.xml"
+        app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.github.khaledakassem.photo_weather.ui.fragments.home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_homeFragment_to_PhotoBottomSheet"
+            app:destination="@id/photoBottomSheet"/>
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/photoHistoryFragment"
+        android:name="com.github.khaledakassem.photo_weather.ui.fragments.photo_history.PhotoHistoryFragment"
+        android:label="@string/photos_list"
+        tools:layout="@layout/fragment_photo_history">
+
+        <action
+            android:id="@+id/action_photoHistoryFragment_to_photoHistoryDetailsFragment"
+            app:destination="@id/photoHistoryDetailsFragment">
+            <argument
+                android:name="imgUrl"
+                app:argType="string"
+                app:nullable="false"
+                />
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/photoHistoryDetailsFragment"
+        android:name="com.github.khaledakassem.photo_weather.ui.fragments.photo_history_details.PhotoHistoryDetailsFragment"
+        android:label="@string/details"
+        tools:layout="@layout/fragment_photo_history_details">
+
+        <argument
+            android:name="imgUrl"
+            app:argType="string"
+            />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="com.github.khaledakassem.photo_weather.ui.fragments.about_us.AboutUsFragment"
+        android:label="@string/about_us"
+        tools:layout="@layout/fragment_about_us">
+
+    </fragment>
+
+
+    <dialog
+        android:id="@+id/photoBottomSheet"
+        android:name="com.github.khaledakassem.photo_weather.ui.photo_bottom_sheet.PhotoBottomSheet"
+        android:label="@string/choose_or_pic"
+        tools:layout="@layout/bottom_sheet_choose_pic" />
+
+
+</navigation>

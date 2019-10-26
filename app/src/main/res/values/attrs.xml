@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomMaterialEditText">
+
+        <attr name="required" format="boolean"/>
+        <attr name="required_error_msg" format="string"/>
+
+        <attr name="validation_type">
+            <enum name="none" value="0"/>
+            <enum name="email" value="1"/>
+            <enum name="phone" value="2"/>
+            <enum name="password" value="3"/>
+            <enum name="confirm_pass" value="4"/>
+            <enum name="phone_or_email" value="5"/>
+            <enum name="egyptian_phone" value="6"/>
+            <enum name="egyptianPhone_or_email" value="7"/>
+            <enum name="name" value="8"/>
+
+        </attr>
+        <attr name="validation_error_msg" format="string"/>
+
+        <!-- must be used when setting validation_type to confirm_pass-->
+        <attr name="must_match" format="reference"/>
+
+    </declare-styleable>
+
+
+</resources>
