@@ -17,8 +17,6 @@ interface AppComponent {
 
     fun app(): PhotoWeatherApp
     fun context(): Context
-
     fun inject(baseViewModel: BaseViewModel)
-
     fun getSharedPreference(): SharedPreferences
 }

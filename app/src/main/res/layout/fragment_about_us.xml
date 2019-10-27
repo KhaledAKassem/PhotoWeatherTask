@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="viewModel"
             type="com.github.khaledakassem.photo_weather.ui.fragments.about_us.AboutUsViewModel" />
     </data>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_marginTop="@dimen/x50dp"
+        android:src="@drawable/launcher_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
     <TextView
+        android:id="@+id/tv_header"
+        android:layout_marginTop="@dimen/x20sp"
+        android:layout_below="@id/img_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/photo_weather_app"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/x20sp"
+        />
+
+    <TextView
+        android:layout_below="@id/tv_header"
+        android:layout_marginStart="@dimen/x15dp"
+        android:textAlignment="center"
+        android:layout_marginEnd="@dimen/x15dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="About us"/>
+        android:textSize="@dimen/x15sp"
+        android:text="@string/about_app_description"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
 </layout>

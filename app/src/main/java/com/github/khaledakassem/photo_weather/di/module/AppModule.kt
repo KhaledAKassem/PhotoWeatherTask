@@ -2,6 +2,7 @@ package com.github.khaledakassem.photo_weather.di.module
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import androidx.paging.PagedList
 import com.github.khaledakassem.photo_weather.PhotoWeatherApp
 import com.github.khaledakassem.photo_weather.common.Constants
@@ -40,19 +41,6 @@ class AppModule(val application: PhotoWeatherApp) {
      */
     @Provides
     @Singleton
-    fun provideSharedPref() = application.getSharedPreferences(Constants.PREFERENCE_NAME, MODE_PRIVATE)
-
-
-    /**
-     * use this method to provide configuration of paged list for paging
-     *
-     * @return (android.arch.paging.PagedList.Config..android.arch.paging.PagedList.Config?)
-     */
-    @Provides
-    @Singleton
-    fun providePagedListConfig() = PagedList.Config.Builder()
-        .setEnablePlaceholders(false)
-        .setInitialLoadSizeHint(Constants.INITIAL_LOAD_SIZE_HINT)
-        .setPageSize(Constants.ROWS_NUM)
-        .build()
+    fun provideSharedPref(): SharedPreferences = application.getSharedPreferences(Constants.PREFERENCE_NAME, MODE_PRIVATE)
+    
 }

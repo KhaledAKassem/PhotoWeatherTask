@@ -3,7 +3,6 @@ package com.github.khaledakassem.photo_weather.common.utils;
 import android.content.Context;
 import android.net.Uri;
 import androidx.core.content.FileProvider;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +11,7 @@ public class ImageManger {
 
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = "com.github.khaledakassem.photo_weather.provider";
     private static String IMAGE_NAME = "";
+
 
     public static Uri save_image_in_provider(Context context) {
         File imagePath = new File(context.getFilesDir(), "images");
@@ -29,5 +29,7 @@ public class ImageManger {
         File imageFile = new File(path, IMAGE_NAME);
         return imageFile;
     }
+
+
 
 }

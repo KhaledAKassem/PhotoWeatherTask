@@ -10,7 +10,4 @@ interface ApiService {
     @GET("weather")
     fun getWeather(@Query("lat") lat : String, @Query("lon") lon : String, @Query("appid") appid : String) : Call<WeatherInfo>
 
-
-
-
 }

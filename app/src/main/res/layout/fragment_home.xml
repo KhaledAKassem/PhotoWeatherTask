@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
         <variable
             name="viewModel"
             type="com.github.khaledakassem.photo_weather.ui.fragments.home.HomeViewModel" />
     </data>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+    <RelativeLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/img_canvas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="@dimen/space_10"
+            app:imageUri="@{viewModel.selectedImage}"
+            />
 
 
+        <ImageView
+            android:id="@+id/fb_share"
+            android:layout_centerVertical="true"
+            android:layout_width="@dimen/x50dp"
+            android:layout_height="@dimen/x50dp"
+            android:src="@drawable/fb" />
 
-    <ImageView
-        android:id="@+id/img_canvas"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/space_10"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_pic_photo"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_pic_photo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/x20sp"
-        android:layout_marginStart="@dimen/x15dp"
-        android:layout_marginEnd="@dimen/x15dp"
-        android:text="@string/camera"
-        android:layout_marginTop="@dimen/x20dp"
-        android:layout_gravity="bottom"
-        app:cornerRadius="@dimen/x12dp"
-        android:backgroundTint="#F00"
-        android:textColor="@android:color/white"
-        />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_pic_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/x15dp"
+            android:layout_marginTop="@dimen/x20dp"
+            android:layout_marginEnd="@dimen/x15dp"
+            android:layout_marginBottom="@dimen/x20sp"
+            android:backgroundTint="#F00"
+            android:text="@string/pic_choose_photo"
+            android:textColor="@android:color/white"
+            app:cornerRadius="@dimen/x12dp" />
 
-    <include
-        layout="@layout/progress_bar"
-        app:viewModel="@{viewModel}" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <include
+            layout="@layout/progress_bar"
+            app:viewModel="@{viewModel}" />
+
+    </RelativeLayout>
 </layout>

@@ -9,7 +9,6 @@ import java.util.*
 
 object Localization {
 
-
     fun setLanguage(context: Context, lang: Int) {
 
         val mLocale: Locale = if (lang == Constants.ARABIC)

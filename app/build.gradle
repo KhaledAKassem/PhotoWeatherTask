@@ -8,6 +8,8 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: "androidx.navigation.safeargs"
 
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -99,9 +101,11 @@ dependencies {
     implementation "androidx.tonyodev.fetch2:xfetch2:3.1.0"
     implementation 'com.mindorks.android:prdownloader:0.5.0'
 
-
     // facebook sharing
     implementation 'com.facebook.android:facebook-share:5.8.0'
+
+    // Picasso Library
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     //google services
     implementation 'com.google.android.gms:play-services-maps:17.0.0'

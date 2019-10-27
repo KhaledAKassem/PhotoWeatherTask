@@ -18,28 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <LinearLayout
+
+
+    <ImageView
+        android:id="@+id/fb_share"
+        android:layout_width="@dimen/x50dp"
+        android:layout_height="@dimen/x50dp"
         android:layout_alignParentBottom="true"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/x20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/x50dp"
+        android:src="@drawable/fb" />
 
-        <ImageView
-            android:id="@+id/fb_share"
-            android:layout_width="@dimen/x50dp"
-            android:layout_height="@dimen/x50dp"
-            android:src="@drawable/fb"
-            android:layout_marginEnd="@dimen/x20sp"
-            />
 
-        <ImageView
-            android:id="@+id/tw_share"
-            android:layout_marginStart="@dimen/x20sp"
-            android:layout_width="@dimen/x50dp"
-            android:layout_height="@dimen/x50dp"
-            android:src="@drawable/twt"
-            />
-    </LinearLayout>
+
 </RelativeLayout>
 </layout>

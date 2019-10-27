@@ -1,4 +1,4 @@
-package com.github.khaledakassem.photo_weather.ui.photo_bottom_sheet
+package com.github.khaledakassem.photo_weather.ui.bottom_sheet.photo_bottom_sheet
 
 import android.content.Intent
 import android.content.pm.PackageManager

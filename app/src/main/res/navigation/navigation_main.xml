@@ -62,7 +62,7 @@
 
     <dialog
         android:id="@+id/photoBottomSheet"
-        android:name="com.github.khaledakassem.photo_weather.ui.photo_bottom_sheet.PhotoBottomSheet"
+        android:name="com.github.khaledakassem.photo_weather.ui.bottom_sheet.photo_bottom_sheet.PhotoBottomSheet"
         android:label="@string/choose_or_pic"
         tools:layout="@layout/bottom_sheet_choose_pic" />
 

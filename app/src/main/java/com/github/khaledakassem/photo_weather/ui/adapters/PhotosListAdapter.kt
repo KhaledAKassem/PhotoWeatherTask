@@ -10,8 +10,6 @@ import com.github.khaledakassem.photo_weather.data.database.schema.entities.Phot
 import com.github.khaledakassem.photo_weather.databinding.ItemHistoryPhotoBinding
 import com.github.khaledakassem.photo_weather.ui.base.BaseViewHolder
 import com.github.khaledakassem.photo_weather.ui.fragments.photo_history.PhotoHistoryView
-import android.graphics.BitmapFactory
-
 
 
 class PhotosListAdapter(private val photos : List<Photos>,
@@ -40,7 +38,6 @@ class PhotosListAdapter(private val photos : List<Photos>,
             photoHistoryView.setOnPhotoClick(photos[position].id, photos[position].imageUrl)
         }
     }
-
 
     inner class ItemHistoryPhoto(binding: ItemHistoryPhotoBinding) :
         BaseViewHolder<ItemHistoryPhotoBinding>(binding)

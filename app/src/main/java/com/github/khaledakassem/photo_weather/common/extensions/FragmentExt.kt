@@ -1,7 +1,6 @@
 package com.github.khaledakassem.photo_weather.common.extensions
 
-import android.annotation.SuppressLint
-import android.graphics.Bitmap
+
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -9,9 +8,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.github.khaledakassem.photo_weather.R
 import com.github.khaledakassem.photo_weather.common.Constants
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
-import java.nio.ByteBuffer
 
 
 

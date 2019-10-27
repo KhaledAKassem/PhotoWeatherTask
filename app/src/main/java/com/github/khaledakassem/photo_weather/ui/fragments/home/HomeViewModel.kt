@@ -1,16 +1,23 @@
 package com.github.khaledakassem.photo_weather.ui.fragments.home
 
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.IntentSender
 import android.graphics.Bitmap
+import android.location.Location
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.github.khaledakassem.photo_weather.common.Constants
 import com.github.khaledakassem.photo_weather.data.database.schema.entities.Photos
-import com.github.khaledakassem.photo_weather.data.network.entities.ApiResponse
 import com.github.khaledakassem.photo_weather.data.network.entities.WeatherInfo
 import com.github.khaledakassem.photo_weather.ui.base.BaseViewModel
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,63 +25,111 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
 
 
-class HomeViewModel (app:Application):BaseViewModel(app) {
+class HomeViewModel(app: Application) : BaseViewModel(app) {
 
-    var latLng: LatLng?=null
-     val photoPath = MutableLiveData<String> ()
+    val selectedImage = MutableLiveData<Bitmap>()
+    val imageUri = MutableLiveData<String>()
 
-    fun getWeather(lat:String,lon:String): MutableLiveData<ApiResponse<WeatherInfo>> {
+    val weatherData = MutableLiveData<WeatherInfo>()
+    var currnetLocation : Location? = null
+
+    var latLng: LatLng? = null
+    val isPhotoSaved by lazy {
+        MutableLiveData<Boolean>().apply { value = false }
+    }
+
+    private val locationRequest = LocationRequest().apply {
+        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        interval = 500
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation(context: Context) {
+
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+        val listener = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                fusedLocationProviderClient.removeLocationUpdates(this)
+                if (currnetLocation == null){
+                    currnetLocation = locationResult?.lastLocation
+                    getWeather(currnetLocation!!.latitude.toString(), currnetLocation!!.longitude.toString())
+                }
+            }
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, listener, null)
+    }
+
+
+    fun checkLocationStatus(activity: Activity) {
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+
+        builder.setAlwaysShow(true)
+        val task = SettingsClient(activity).checkLocationSettings(builder.build())
+        task.addOnSuccessListener { getCurrentLocation(activity) }
+
+        task.addOnFailureListener(activity) {
+            if (it is ResolvableApiException) {
+                try {
+                    it.startResolutionForResult(activity, Constants.LOCATION_REQUEST_CODE)
+                } catch (sendEx: IntentSender.SendIntentException) {
+                }
+            }
+        }
+    }
+
+    fun getWeather(lat: String, lon: String) {
         isLoading.value = true
-        val apiResponse = appRepositoryHelper.getWeather(lat,lon)
+        val apiResponse = appRepositoryHelper.getWeather(lat, lon)
         errorResponse.removeSource(apiResponse)
         errorResponse.addSource(apiResponse) {
             isLoading.value = false
+            weatherData.postValue(it.responseBody)
             if (it.responseCode != 401 && it.responseCode != 422)
                 errorResponse.value = it
-            else if(it.responseCode ==422)
-                errorResponse.value=it
+            else if (it.responseCode == 422)
+                errorResponse.value = it
         }
-        return apiResponse
     }
 
     /**
      * create instance of photos and insert it into database using coroutines,
      * then update the value of both  isFavMovie liveData and favMovie.
      */
-     fun insertPhoto(photoPath:String) {
+    private suspend fun insertPhoto(photoPath: String) {
+        val photo = Photos(imageUrl = photoPath)
+        appRepositoryHelper.insertPhoto(photo)
 
-        viewModelScope.launch {
-            isLoading.postValue(true)
-            val photo =
-                Photos(imageUrl = photoPath)
-            withContext(Dispatchers.IO){
-                appRepositoryHelper.insertPhoto(photo)
-                isLoading.postValue(false)
-            }
-        }
+        isPhotoSaved.postValue(true)
+        isLoading.postValue(false)
     }
 
     fun saveInInternal(bitmapImage: Bitmap) {
-        isLoading.postValue(true)
+        isLoading.value = true
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val path =saveToInternalStorage(bitmapImage)
-                photoPath.postValue(path)
+                val path = saveToInternalStorage(bitmapImage)
+                imageUri.postValue(path)
+                insertPhoto(path)
             }
         }
     }
 
-    fun  saveToInternalStorage(bitmapImage: Bitmap): String {
+
+    private fun saveToInternalStorage(bitmapImage: Bitmap): String {
         val cw = ContextWrapper(app.applicationContext)
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
-        val rnds = (0..1000).random()
-        val mypath = File(directory, "$rnds.jpg")
+        val photoName = Date().time
+        val photoPath = File(directory, "$photoName.jpg")
         var fos: FileOutputStream? = null
         try {
-            fos = FileOutputStream(mypath)
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            fos = FileOutputStream(photoPath)
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 50, fos)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -84,9 +139,8 @@ class HomeViewModel (app:Application):BaseViewModel(app) {
                 e.printStackTrace()
             }
         }
-        return mypath.absolutePath
+        return photoPath.absolutePath
     }
-
 
 
 }

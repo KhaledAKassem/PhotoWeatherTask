@@ -6,7 +6,7 @@
     <string name="no_internet">No internet connection</string>
     <string name="home">Home</string>
     <string name="photos_list">Photos List</string>
-    <string name="about_us">About Us</string>
+    <string name="about_us">About App</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="choose_or_pic">Choose photo or pic new</string>
@@ -14,5 +14,19 @@
     <string name="gps_off">Ohh .. GPS is off please enable it now!!</string>
     <string name="enable_gps">Please enable your GPS !</string>
     <string name="details">Details</string>
+    <string name="facebook_app_id">593692258033998</string>
+    <string name="facebook_login_protocol_scheme">fb593692258033998</string>
+    <string name="operation_cancelled">Operation Cancelled !!</string>
+    <string name="something_error">Some Thing Error</string>
+    <string name="shared_successfully">Shared Successfully</string>
+    <string name="pic_choose_photo">Pic / choose Photo</string>
+    <string name="photo_weather_app">Photo Weather App</string>
+    <string name="about_app_description">Photo Weather Task Wrote with Kotlin Language and MVVM Architecture Pattern and Repository Pattern , using Architecture Component , Dagger2 , DataBinding , Navigation Component ,Binding Adapter , Internal storage [Native] , Facebook sdk for sharing </string>
+    <string name="photo_shot">Shot By PhotoWeather App 2019</string>
+    <string name="photo_saved">Photo Saved Successfully</string>
+    <string name="pic_first">Please pic photo for weather first !!</string>
+    <string name="image_prepared">Your image Prepared for uploading pls wait ....</string>
+    <string name="some_thing_lsot">Please try again some thing lost</string>
+
 
 </resources>

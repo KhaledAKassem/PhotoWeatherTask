@@ -15,11 +15,9 @@ class AppRepositoryHelper @Inject constructor(
     private val databaseHelper: AppDatabaseHelper) : RepositoryHelper {
 
     /** networking **/
-
     override fun getWeather(
         lat: String, lon: String, appId: String
     ) = networkHelper.getWeather(lat,lon, BuildConfig.API_KEY)
-
 
     /** preferences **/
     override fun setUserLanguage(language: Int) = preferenceHelper.setUserLanguage(language)

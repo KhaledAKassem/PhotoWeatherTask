@@ -13,12 +13,7 @@ object Constants {
 
     //time
     const val SNAK_BAR_DURATION: Int = 3 * 1000
-
-    // paging
-    const val ROWS_NUM = 20
-    const val INITIAL_LOAD_SIZE_HINT = 25
-
-
+    
     //strings
     const val NETWORKING_LOG = "networking"
 

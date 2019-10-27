@@ -44,7 +44,7 @@
         </provider>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="593692258033998"/>
+            android:value="@string/facebook_app_id"/>
 
         <activity
             tools:replace="android:theme"
@@ -55,7 +55,8 @@
             android:label="@string/app_name">
         </activity>
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider593692258033998"
+        <provider
+            android:authorities="com.facebook.app.FacebookContentProvider593692258033998"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true">
         </provider>

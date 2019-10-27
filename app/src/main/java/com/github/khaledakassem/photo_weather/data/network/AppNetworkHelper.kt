@@ -15,7 +15,13 @@ class AppNetworkHelper @Inject constructor(
     private val preferences: SharedPreferences
 ) : NetworkHelper {
 
-
+    /**
+     * getWeather used for getting result of weather conditions
+     * @param lat String
+     * @param lon String
+     * @param appId String
+     * @return MutableLiveData<ApiResponse<WeatherInfo>>
+     */
     override fun getWeather(lat:String,lon:String,appId:String): MutableLiveData<ApiResponse<WeatherInfo>> {
         return apiService.getWeather(lat,lon,appId).getResponse()
     }

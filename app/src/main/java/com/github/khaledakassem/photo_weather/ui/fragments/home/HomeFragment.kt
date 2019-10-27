@@ -12,34 +12,55 @@ import com.github.khaledakassem.photo_weather.common.Constants
 import com.github.khaledakassem.photo_weather.common.utils.ImageManger
 import com.github.khaledakassem.photo_weather.databinding.FragmentHomeBinding
 import com.github.khaledakassem.photo_weather.ui.base.BaseFragment
-import android.content.ContextWrapper
-import android.content.Context
 import android.graphics.*
-import android.location.Location
-import android.os.AsyncTask
+import android.graphics.drawable.Drawable
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.share.Sharer
+import com.facebook.share.model.SharePhoto
+import com.facebook.share.model.SharePhotoContent
+import com.facebook.share.widget.ShareDialog
 import com.github.khaledakassem.photo_weather.R
-import com.github.khaledakassem.photo_weather.common.GlideApp
 import com.github.khaledakassem.photo_weather.common.extensions.confirmMsg
-import com.github.khaledakassem.photo_weather.common.extensions.loadImg
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.github.khaledakassem.photo_weather.common.extensions.errorMsg
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
+import java.io.File
+import java.lang.Exception
 
 
-class HomeFragment :HomeView, BaseFragment<HomeViewModel, FragmentHomeBinding>(HomeViewModel::class.java) {
+class HomeFragment : HomeView,
+    BaseFragment<HomeViewModel, FragmentHomeBinding>(HomeViewModel::class.java) {
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var lastLocation: Location
+    private lateinit var callbackManager: CallbackManager
+    var shareDialog: ShareDialog? = null
+    private val target = object : Target {
+        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+            errorMsg(e.toString())
+        }
+
+        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+            confirmMsg(getString(R.string.image_prepared))
+        }
+
+        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+
+            val sharePhoto = SharePhoto.Builder()
+                .setBitmap(bitmap)
+                .setCaption(getString(R.string.photo_shot))
+                .build()
+
+            if (ShareDialog.canShow(SharePhotoContent::class.java)) {
+                val content = SharePhotoContent.Builder()
+                    .addPhoto(sharePhoto)
+                    .build()
+                shareDialog!!.show(content)
+            }
+        }
+
+    }
 
     override fun getLayoutRes() = R.layout.fragment_home
 
@@ -50,15 +71,13 @@ class HomeFragment :HomeView, BaseFragment<HomeViewModel, FragmentHomeBinding>(H
     override fun init(savedInstanceState: Bundle?) {
         setUpMap()
         initOpenChangePhoto()
-    }
-
-    override fun initGetWeatherData() {
-        viewModel.getWeather(
-            viewModel.latLng!!.latitude.toString(),
-            viewModel.latLng!!.longitude.toString()
-        ).observe(this, Observer {
-            if (it.isResponseSuccessful) {
-                mBinding.btnPicPhoto.text = it.responseBody!!.weather[0].description
+        initSocialMedia()
+        shareDialog = ShareDialog(this)
+        callbackManager = CallbackManager.Factory.create()
+        viewModel.isPhotoSaved.observe(this, Observer {
+            if (it) {
+                viewModel.isPhotoSaved.value = false
+                confirmMsg(getString(R.string.photo_saved))
             }
         })
     }
@@ -88,13 +107,18 @@ class HomeFragment :HomeView, BaseFragment<HomeViewModel, FragmentHomeBinding>(H
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+        if (grantResults.isEmpty())
+            return
+
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == Constants.REQUEST_CAMERA_PERMISSION_CODE)
-                openCamera()
-            else if (requestCode == Constants.REQUEST_STORAGE_PERMISSION_CODE)
-                openGallery()
+            when (requestCode) {
+                Constants.REQUEST_CAMERA_PERMISSION_CODE -> openCamera()
+                Constants.REQUEST_STORAGE_PERMISSION_CODE -> openGallery()
+                Constants.REQUEST_LOCATION_PERMISSION_CODE -> viewModel.checkLocationStatus(activity!!)
+            }
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -108,49 +132,29 @@ class HomeFragment :HomeView, BaseFragment<HomeViewModel, FragmentHomeBinding>(H
                         null, null, null
                     )
                     cursor?.close()
-                    val source =ImageDecoder.createSource(activity?.contentResolver!!, selectedImage)
-                    val  bitmap = ImageDecoder.decodeBitmap(source)
-
-                    mBinding.imgCanvas.loadImg(selectedImage,R.drawable.splash_icon)
-                 
-                    viewModel.saveInInternal(bitmap)
-
-                    viewModel.photoPath.observe(this, Observer {
-                        if(it !=null){
-                            viewModel.insertPhoto(it)
-                            confirmMsg("Photo Saved Successfully")
-                        }
-                    })
+                    val bitmap = MediaStore.Images.Media.getBitmap(
+                        activity?.contentResolver,
+                        selectedImage
+                    )
+                    initPicWithCanvas(bitmap)
                 }
             }
+
             Constants.CAMERA_REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    var bitmap =
-                        BitmapFactory.decodeFile(ImageManger.get_saved_image(activity!!).absolutePath)
-                    bitmap=bitmap.copy(Bitmap.Config.ARGB_8888,true)
-                    val canvas = Canvas(bitmap)
-                    val paint=Paint(Paint.ANTI_ALIAS_FLAG)
-                    paint.color = Color.rgb(61,61,61)
-                    paint.textSize=200f
-                    val bounds=Rect()
-                    val text="Khaled Image"
-                    paint.getTextBounds(text,0,text.length,bounds)
-                    val x =(bitmap.width -bounds.width())/2
-                    val y=(bitmap.height+bounds.height())/4
-                    canvas.drawText(text,x.toFloat(),y.toFloat(),paint)
-                    img_canvas.setImageBitmap(bitmap)
-                    viewModel.saveInInternal(bitmap)
-
-                    viewModel.photoPath.observe(this, Observer {
-                        if(it !=null){
-                            viewModel.insertPhoto(it)
-                            confirmMsg("Photo Saved Successfully")
-                        }
-                    })
+                    try {
+                        val bitmap =
+                            BitmapFactory.decodeFile(ImageManger.get_saved_image(activity!!).absolutePath)
+                        initPicWithCanvas(bitmap)
+                    } catch (e: Exception) {
+                        errorMsg(getString(R.string.some_thing_lsot))
+                    }
                 }
             }
+            Constants.LOCATION_REQUEST_CODE -> viewModel.getCurrentLocation(context!!)
         }
     }
+
 
     override fun setUpMap() {
         if (ActivityCompat.checkSelfPermission(
@@ -165,34 +169,65 @@ class HomeFragment :HomeView, BaseFragment<HomeViewModel, FragmentHomeBinding>(H
             )
             return
         }
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                lastLocation = location
-                viewModel.latLng = LatLng(location.latitude, location.longitude)
-                initGetWeatherData()
+        viewModel.checkLocationStatus(activity!!)
+    }
+
+
+    override fun initPicWithCanvas(bitmap: Bitmap): Bitmap {
+
+        val bitmapCopy = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        viewModel.weatherData.observe(this, Observer {
+            val canvas = Canvas(bitmapCopy)
+
+
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.typeface = Typeface.create("Arial", Typeface.BOLD)
+            paint.color = Color.YELLOW
+            paint.textSize = resources.getDimension(R.dimen.x50sp)
+
+            val bounds = Rect()
+            val weatherInfo =
+                "${it.sys.country} , ${it.weather[0].main} , ${it.weather[0].description}"
+            paint.getTextBounds(weatherInfo, 0, weatherInfo.length, bounds)
+            val x = (bitmapCopy.width - bounds.width()) / 2
+            val y = (bitmapCopy.height + bounds.height()) / 14
+            canvas.drawText(weatherInfo, x.toFloat(), y.toFloat(), paint)
+
+
+            viewModel.selectedImage.postValue(bitmapCopy)
+            viewModel.saveInInternal(bitmapCopy)
+
+        })
+        return bitmapCopy
+    }
+
+
+    override fun initSocialMedia() {
+
+        mBinding.fbShare.setOnClickListener {
+            val path = viewModel.imageUri.value
+            if (!path.isNullOrEmpty()) {
+                Picasso.get().load(File(path!!)).into(target)
+                shareDialog!!.registerCallback(
+                    callbackManager,
+                    object : FacebookCallback<Sharer.Result> {
+                        override fun onSuccess(result: Sharer.Result?) {
+                            confirmMsg(getString(R.string.shared_successfully))
+                        }
+
+                        override fun onCancel() {
+                            errorMsg(getString(R.string.operation_cancelled))
+                        }
+
+                        override fun onError(error: FacebookException?) {
+                            errorMsg(getString(R.string.something_error))
+                        }
+                    })
             } else {
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
-                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        lastLocation = location
-                        viewModel.latLng = LatLng(location.latitude, location.longitude)
-                        initGetWeatherData()
-                    }
-                }
+                errorMsg(getString(R.string.pic_first))
             }
         }
     }
 }
-class doAsync(val handler: () -> Unit) : AsyncTask<Void, Void, Void>() {
-    init {
-        execute()
-    }
 
-    override fun doInBackground(vararg params: Void?): Void? {
-        handler()
-        return null
-    }
-
-
-}
