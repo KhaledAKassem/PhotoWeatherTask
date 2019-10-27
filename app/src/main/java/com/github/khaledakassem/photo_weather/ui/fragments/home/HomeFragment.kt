@@ -36,6 +36,11 @@ class HomeFragment : HomeView,
 
     private lateinit var callbackManager: CallbackManager
     var shareDialog: ShareDialog? = null
+
+
+    /**
+     * this target to check status of bitmap to share it on facebook
+     */
     private val target = object : Target {
         override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
             errorMsg(e.toString())
@@ -59,7 +64,6 @@ class HomeFragment : HomeView,
                 shareDialog!!.show(content)
             }
         }
-
     }
 
     override fun getLayoutRes() = R.layout.fragment_home
@@ -179,8 +183,6 @@ class HomeFragment : HomeView,
 
         viewModel.weatherData.observe(this, Observer {
             val canvas = Canvas(bitmapCopy)
-
-
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.typeface = Typeface.create("Arial", Typeface.BOLD)
             paint.color = Color.YELLOW
@@ -193,8 +195,6 @@ class HomeFragment : HomeView,
             val x = (bitmapCopy.width - bounds.width()) / 2
             val y = (bitmapCopy.height + bounds.height()) / 14
             canvas.drawText(weatherInfo, x.toFloat(), y.toFloat(), paint)
-
-
             viewModel.selectedImage.postValue(bitmapCopy)
             viewModel.saveInInternal(bitmapCopy)
 
@@ -204,7 +204,6 @@ class HomeFragment : HomeView,
 
 
     override fun initSocialMedia() {
-
         mBinding.fbShare.setOnClickListener {
             val path = viewModel.imageUri.value
             if (!path.isNullOrEmpty()) {

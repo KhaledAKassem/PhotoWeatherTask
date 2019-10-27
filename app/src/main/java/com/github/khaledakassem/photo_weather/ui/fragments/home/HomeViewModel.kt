@@ -9,7 +9,6 @@ import android.content.ContextWrapper
 import android.content.IntentSender
 import android.graphics.Bitmap
 import android.location.Location
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.khaledakassem.photo_weather.common.Constants
@@ -18,7 +17,6 @@ import com.github.khaledakassem.photo_weather.data.network.entities.WeatherInfo
 import com.github.khaledakassem.photo_weather.ui.base.BaseViewModel
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,9 +32,9 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     val imageUri = MutableLiveData<String>()
 
     val weatherData = MutableLiveData<WeatherInfo>()
-    var currnetLocation : Location? = null
+    var currentLocation: Location? = null
 
-    var latLng: LatLng? = null
+
     val isPhotoSaved by lazy {
         MutableLiveData<Boolean>().apply { value = false }
     }
@@ -46,6 +44,10 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
         interval = 500
     }
 
+    /**
+     * getCurrentLocation(-) :used for getting current location for user .
+     * @param context Context
+     */
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(context: Context) {
 
@@ -54,9 +56,12 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
         val listener = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 fusedLocationProviderClient.removeLocationUpdates(this)
-                if (currnetLocation == null){
-                    currnetLocation = locationResult?.lastLocation
-                    getWeather(currnetLocation!!.latitude.toString(), currnetLocation!!.longitude.toString())
+                if (currentLocation == null) {
+                    currentLocation = locationResult?.lastLocation
+                    getWeather(
+                        currentLocation!!.latitude.toString(),
+                        currentLocation!!.longitude.toString()
+                    )
                 }
             }
         }
@@ -83,6 +88,11 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
         }
     }
 
+    /**
+     * getWeather used for getting Weather data through lat and long
+     * @param lat String
+     * @param lon String
+     */
     fun getWeather(lat: String, lon: String) {
         isLoading.value = true
         val apiResponse = appRepositoryHelper.getWeather(lat, lon)
@@ -109,6 +119,10 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
         isLoading.postValue(false)
     }
 
+    /**
+     * save path for image on room
+     * @param bitmapImage Bitmap
+     */
     fun saveInInternal(bitmapImage: Bitmap) {
         isLoading.value = true
         viewModelScope.launch {
@@ -121,6 +135,11 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     }
 
 
+    /**
+     * save bitmap image which caught from Gallery or Camera on internal storage
+     * @param bitmapImage Bitmap
+     * @return String
+     */
     private fun saveToInternalStorage(bitmapImage: Bitmap): String {
         val cw = ContextWrapper(app.applicationContext)
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)

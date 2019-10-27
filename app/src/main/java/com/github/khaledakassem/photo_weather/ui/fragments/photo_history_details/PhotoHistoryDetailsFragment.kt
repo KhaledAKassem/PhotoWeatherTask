@@ -32,6 +32,9 @@ class PhotoHistoryDetailsFragment : PhotoHistoryDetailsView,
     private lateinit var callbackManager: CallbackManager
     var shareDialog: ShareDialog? = null
 
+    /**
+     * this target to check status of bitmap to share it on facebook
+     */
     private val target = object : Target {
         override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
             errorMsg(e.toString())
